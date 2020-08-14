@@ -1,0 +1,33 @@
+version: "3"
+networks:
+  petstore:
+    external: true
+
+services:
+  petstore-db:
+    image: postgres:9.6
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - 5432
+    environment:
+      - POSTGRES_USER=db-user
+      - POSTGRES_PASSWORD=db-password
+    healthcheck:
+      test: PGPASSWORD='db-password' psql -U db-user --command='SELECT 1'
+      interval: 1s
+      timeout: 2s
+      retries: 5
+    networks:
+      - petstore
+
+  petstore:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    environment:
+      - DB_URL=postgres://db-user:db-password@myapp-db:5432/petstore?sslmode=disable
+    depends_on:
+      - petstore-db
+    networks:
+      - petstore
