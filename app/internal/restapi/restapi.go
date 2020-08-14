@@ -23,7 +23,8 @@ type RESTAPI struct {
 func New(logger *zap.SugaredLogger, port int) *RESTAPI {
 	router := mux.NewRouter()
 
-	router.HandleFunc("/pet", addPet()).Methods(http.MethodPost)
+	peth := petHandlers{}
+	router.HandleFunc("/pet", peth.addPet()).Methods(http.MethodPost)
 	//router.HandleFunc("/pet").Methods(http.MethodPut)
 
 	return &RESTAPI{

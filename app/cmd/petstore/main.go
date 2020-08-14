@@ -1,13 +1,12 @@
 package main
 
 import (
-	"context"
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 
 	"github.com/PetStores/go-simple/internal/diagnostics"
+	categorydp "github.com/PetStores/go-simple/internal/petstore/category/withdb"
 	"github.com/PetStores/go-simple/internal/resources"
 	"github.com/PetStores/go-simple/internal/restapi"
 
@@ -19,23 +18,30 @@ func main() {
 	defer logger.Sync()
 
 	slogger := logger.Sugar()
+	slogger.Info("Starting the application...")
+	slogger.Info("Reading configuration and initializing resources...")
 
-	// Timeout context to shutdown resources and servers
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
-	rsc, err := resources.New(ctx, logger)
+	rsc, err := resources.New(slogger)
 	if err != nil {
 		slogger.Fatalw("Can't initialize resources.", "err", err)
 	}
+	defer func() {
+		err = rsc.Release()
+		if err != nil {
+			slogger.Errorw("Got an error during resources release.", "err", err)
+		}
+	}()
 
+	slogger.Info("Configuring the application units...")
+	categorydp.New(rsc.DB)
+
+	slogger.Info("Starting the servers...")
 	rapi := restapi.New(slogger, rsc.Config.RESTAPIPort)
 	rapi.Start()
 
 	diag := diagnostics.New(slogger, rsc.Config.DiagPort, rsc.Healthz)
 	diag.Start()
-
-	slogger.Info("The servers are ready.")
+	slogger.Info("The application is ready to serve requests.")
 
 	interrupt := make(chan os.Signal, 1)
 	signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)

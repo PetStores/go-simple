@@ -18,7 +18,7 @@ WORKDIR /petstore
 
 # Build the binary with go build
 RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 \
-    go build -o ./bin/petstore .
+    go build -o ./bin/petstore ./cmd/petstore
 
 # Final stage: Run the binary
 FROM scratch

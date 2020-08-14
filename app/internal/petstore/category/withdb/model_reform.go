@@ -27,7 +27,7 @@ func (v *categoryTableType) Name() string {
 
 // Columns returns a new slice of column names for that view or table in SQL database.
 func (v *categoryTableType) Columns() []string {
-	return []string{"id", "name"}
+	return []string{"id", "name", "is_visible", "created_at", "updated_at"}
 }
 
 // NewStruct makes a new struct for that view or table.
@@ -47,15 +47,18 @@ func (v *categoryTableType) PKColumnIndex() uint {
 
 // categoryTable represents categories view or table in SQL database.
 var categoryTable = &categoryTableType{
-	s: parse.StructInfo{Type: "category", SQLSchema: "", SQLName: "categories", Fields: []parse.FieldInfo{{Name: "ID", Type: "int64", Column: "id"}, {Name: "Name", Type: "string", Column: "name"}}, PKFieldIndex: 0},
+	s: parse.StructInfo{Type: "category", SQLSchema: "", SQLName: "categories", Fields: []parse.FieldInfo{{Name: "ID", Type: "int64", Column: "id"}, {Name: "Name", Type: "string", Column: "name"}, {Name: "IsVisible", Type: "bool", Column: "is_visible"}, {Name: "CreatedAt", Type: "time.Time", Column: "created_at"}, {Name: "UpdatedAt", Type: "time.Time", Column: "updated_at"}}, PKFieldIndex: 0},
 	z: new(category).Values(),
 }
 
 // String returns a string representation of this struct or record.
 func (s category) String() string {
-	res := make([]string, 2)
+	res := make([]string, 5)
 	res[0] = "ID: " + reform.Inspect(s.ID, true)
 	res[1] = "Name: " + reform.Inspect(s.Name, true)
+	res[2] = "IsVisible: " + reform.Inspect(s.IsVisible, true)
+	res[3] = "CreatedAt: " + reform.Inspect(s.CreatedAt, true)
+	res[4] = "UpdatedAt: " + reform.Inspect(s.UpdatedAt, true)
 	return strings.Join(res, ", ")
 }
 
@@ -65,6 +68,9 @@ func (s *category) Values() []interface{} {
 	return []interface{}{
 		s.ID,
 		s.Name,
+		s.IsVisible,
+		s.CreatedAt,
+		s.UpdatedAt,
 	}
 }
 
@@ -74,6 +80,9 @@ func (s *category) Pointers() []interface{} {
 	return []interface{}{
 		&s.ID,
 		&s.Name,
+		&s.IsVisible,
+		&s.CreatedAt,
+		&s.UpdatedAt,
 	}
 }
 

@@ -12,6 +12,12 @@ type WithDB struct {
 	db *reform.DB
 }
 
+func New(db *reform.DB) *WithDB {
+	return &WithDB{
+		db: db,
+	}
+}
+
 func (wdb *WithDB) FindCategory(params map[string]interface{}) (*datatype.Category, error) {
 	intersect := make([]string, len(params))
 	args := make([]interface{}, len(params))
@@ -27,13 +33,17 @@ func (wdb *WithDB) FindCategory(params map[string]interface{}) (*datatype.Catego
 	sts, err := wdb.db.SelectAllFrom(categoryTable, tail, args...)
 	if err != nil {
 		//
-	} else if len(sts) == 0 {
-		return nil, fmt.Errorf("couldn't find category with the given parameters")
 	} else if len(sts) > 1 {
 
-	} else {
-
+	} else if len(sts) == 0 {
+		return nil, nil
 	}
 
-	//
+	internal := sts[0].(*category)
+	external := datatype.Category{
+		ID:   &internal.ID,
+		Name: &internal.Name,
+	}
+
+	return &external, nil
 }

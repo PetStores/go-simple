@@ -1,18 +1,21 @@
 package resources
 
 import (
-	"context"
+	"database/sql"
 	"fmt"
 
-	"github.com/jackc/pgx/v4/pgxpool"
+	"gopkg.in/reform.v1/dialects/postgresql"
 
+	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/kelseyhightower/envconfig"
 	"go.uber.org/zap"
+	"gopkg.in/reform.v1"
 )
 
 type R struct {
 	Config Config
-	PGPool *pgxpool.Pool
+	DB     *reform.DB
+	conn   *sql.DB
 }
 
 type Config struct {
@@ -21,20 +24,26 @@ type Config struct {
 	DBURL       string `envconfig:"DATABASE_URL" default:"postgres://user:password@localhost:5432/petstore?sslmode=disable" required:"true"`
 }
 
-func New(ctx context.Context, logger *zap.Logger) (*R, error) {
+func New(logger *zap.SugaredLogger) (*R, error) {
 	conf := Config{}
 	err := envconfig.Process("", &conf)
 	if err != nil {
 		return nil, fmt.Errorf("can't process the config: %w", err)
 	}
 
-	pgpool, err := pgconnect(ctx, logger, conf.DBURL)
+	conn, err := sql.Open("pgx", conf.DBURL)
 	if err != nil {
 		return nil, err
 	}
 
+	db := reform.NewDB(conn, postgresql.Dialect, reform.NewPrintfLogger(logger.Infof))
+
 	return &R{
 		Config: conf,
-		PGPool: pgpool,
+		DB:     db,
 	}, nil
+}
+
+func (r *R) Release() error {
+	return r.conn.Close()
 }
