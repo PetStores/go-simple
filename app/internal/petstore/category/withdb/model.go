@@ -4,7 +4,7 @@ import "time"
 
 //go:generate reform
 
-//reform:categories
+//reform:category
 type category struct {
 	ID        int64     `reform:"id,pk"`
 	Name      string    `reform:"name"`

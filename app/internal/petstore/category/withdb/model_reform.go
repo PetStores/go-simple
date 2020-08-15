@@ -20,7 +20,7 @@ func (v *categoryTableType) Schema() string {
 	return v.s.SQLSchema
 }
 
-// Name returns a view or table name in SQL database ("categories").
+// Name returns a view or table name in SQL database ("category").
 func (v *categoryTableType) Name() string {
 	return v.s.SQLName
 }
@@ -45,9 +45,9 @@ func (v *categoryTableType) PKColumnIndex() uint {
 	return uint(v.s.PKFieldIndex)
 }
 
-// categoryTable represents categories view or table in SQL database.
+// categoryTable represents category view or table in SQL database.
 var categoryTable = &categoryTableType{
-	s: parse.StructInfo{Type: "category", SQLSchema: "", SQLName: "categories", Fields: []parse.FieldInfo{{Name: "ID", Type: "int64", Column: "id"}, {Name: "Name", Type: "string", Column: "name"}, {Name: "IsVisible", Type: "bool", Column: "is_visible"}, {Name: "CreatedAt", Type: "time.Time", Column: "created_at"}, {Name: "UpdatedAt", Type: "time.Time", Column: "updated_at"}}, PKFieldIndex: 0},
+	s: parse.StructInfo{Type: "category", SQLSchema: "", SQLName: "category", Fields: []parse.FieldInfo{{Name: "ID", Type: "int64", Column: "id"}, {Name: "Name", Type: "string", Column: "name"}, {Name: "IsVisible", Type: "bool", Column: "is_visible"}, {Name: "CreatedAt", Type: "time.Time", Column: "created_at"}, {Name: "UpdatedAt", Type: "time.Time", Column: "updated_at"}}, PKFieldIndex: 0},
 	z: new(category).Values(),
 }
 
