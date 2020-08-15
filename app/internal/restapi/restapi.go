@@ -7,6 +7,10 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/PetStores/go-simple/internal/petstore/pet"
+
+	"github.com/PetStores/go-simple/internal/petstore/category"
+
 	"go.uber.org/zap"
 
 	"github.com/gorilla/mux"
@@ -20,17 +24,20 @@ type RESTAPI struct {
 }
 
 // New returns a new instance of the REST API server.
-func New(logger *zap.SugaredLogger, port int) *RESTAPI {
+func New(logger *zap.SugaredLogger, port int, categoryController *category.Controller, petController *pet.Controller) *RESTAPI {
 	router := mux.NewRouter()
 
-	peth := petHandlers{}
+	peth := petHandlers{
+		categoryController: categoryController,
+		petController:      petController,
+	}
 	router.HandleFunc("/pet", peth.addPet()).Methods(http.MethodPost)
 	//router.HandleFunc("/pet").Methods(http.MethodPut)
 
 	return &RESTAPI{
 		server: http.Server{
 			Addr:    net.JoinHostPort("", strconv.Itoa(port)),
-			Handler: nil,
+			Handler: router,
 		},
 		errors: make(chan error, 1),
 		logger: logger,

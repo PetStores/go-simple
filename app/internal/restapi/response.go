@@ -16,6 +16,6 @@ func ResponseBadRequest(msg string, w http.ResponseWriter) {
 		Code:    http.StatusBadRequest,
 		Message: msg,
 	}
-	json.NewEncoder(w).Encode(resp)
 	w.WriteHeader(http.StatusBadRequest)
+	json.NewEncoder(w).Encode(resp)
 }

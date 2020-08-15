@@ -6,7 +6,10 @@ import (
 	"syscall"
 
 	"github.com/PetStores/go-simple/internal/diagnostics"
+	categoryc "github.com/PetStores/go-simple/internal/petstore/category"
 	categorydp "github.com/PetStores/go-simple/internal/petstore/category/withdb"
+	petc "github.com/PetStores/go-simple/internal/petstore/pet"
+	petdp "github.com/PetStores/go-simple/internal/petstore/pet/withdb"
 	"github.com/PetStores/go-simple/internal/resources"
 	"github.com/PetStores/go-simple/internal/restapi"
 
@@ -33,10 +36,14 @@ func main() {
 	}()
 
 	slogger.Info("Configuring the application units...")
-	categorydp.New(rsc.DB)
+	catdb := categorydp.New(rsc.DB)
+	cc := categoryc.NewController(catdb)
+
+	petdb := petdp.New(rsc.DB)
+	pc := petc.NewController(petdb)
 
 	slogger.Info("Starting the servers...")
-	rapi := restapi.New(slogger, rsc.Config.RESTAPIPort)
+	rapi := restapi.New(slogger, rsc.Config.RESTAPIPort, cc, pc)
 	rapi.Start()
 
 	diag := diagnostics.New(slogger, rsc.Config.DiagPort, rsc.Healthz)

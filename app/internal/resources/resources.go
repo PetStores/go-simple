@@ -21,7 +21,7 @@ type R struct {
 type Config struct {
 	DiagPort    int    `envconfig:"DIAG_PORT" default:"8081" required:"true"`
 	RESTAPIPort int    `envconfig:"PORT" default:"8080" required:"true"`
-	DBURL       string `envconfig:"DATABASE_URL" default:"postgres://user:password@localhost:5432/petstore?sslmode=disable" required:"true"`
+	DBURL       string `envconfig:"DB_URL" default:"postgres://user:password@localhost:5432/petstore?sslmode=disable" required:"true"`
 }
 
 func New(logger *zap.SugaredLogger) (*R, error) {

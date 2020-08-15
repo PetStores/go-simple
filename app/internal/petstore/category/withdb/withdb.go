@@ -32,7 +32,7 @@ func (wdb *WithDB) FindCategory(params map[string]interface{}) (*datatype.Catego
 
 	sts, err := wdb.db.SelectAllFrom(categoryTable, tail, args...)
 	if err != nil {
-		//
+		return nil, err
 	} else if len(sts) > 1 {
 
 	} else if len(sts) == 0 {

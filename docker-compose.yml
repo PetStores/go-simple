@@ -9,7 +9,7 @@ services:
     volumes:
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - 5432
+      - 5432:5432
     environment:
       - POSTGRES_USER=db-user
       - POSTGRES_PASSWORD=db-password
@@ -25,8 +25,13 @@ services:
     build:
       context: ./app
       dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+      - 8081:8081
     environment:
-      - DB_URL=postgres://db-user:db-password@myapp-db:5432/petstore?sslmode=disable
+      - DB_URL=postgres://db-user:db-password@petstore-db:5432/petstore?sslmode=disable
+      - PORT=8080
+      - DIAG_PORT=8081
     depends_on:
       - petstore-db
     networks:
