@@ -36,7 +36,8 @@ func (h *petHandlers) addPet() func(http.ResponseWriter, *http.Request) {
 
 			categ, err := h.categoryController.Validate(opts...)
 			if err != nil {
-				ResponseBadRequest("Couldn't validate category", w)
+				ResponseInternalError("Couldn't validate category", w)
+				// Here we can log the internal error, but we don't show it to the user
 				return
 			}
 

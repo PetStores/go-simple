@@ -17,7 +17,7 @@ services:
       - DIAG_PORT=8081
     depends_on:
       - petstore-db
-      - petstore-flyway
+      - flyway
     networks:
       - petstore
 
@@ -38,7 +38,7 @@ services:
     networks:
       - petstore
 
-  petstore-flyway:
+  flyway:
     image: boxfuse/flyway
     command: -url=jdbc:postgresql://petstore-db:5432/petstore -user=db-user -password=db-password migrate
     volumes:
@@ -47,3 +47,13 @@ services:
       - petstore-db
     networks:
       - petstore
+
+#  pgadmin:
+#    image: dpage/pgadmin4
+#    environment:
+#      PGADMIN_DEFAULT_EMAIL: pgadmin@petstore
+#      PGADMIN_DEFAULT_PASSWORD: pgadmin
+#    ports:
+#      - 5050:5050
+#    networks:
+#      - petstore

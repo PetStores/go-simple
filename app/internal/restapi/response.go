@@ -19,3 +19,12 @@ func ResponseBadRequest(msg string, w http.ResponseWriter) {
 	w.WriteHeader(http.StatusBadRequest)
 	json.NewEncoder(w).Encode(resp)
 }
+
+func ResponseInternalError(msg string, w http.ResponseWriter) {
+	resp := APIResponse{
+		Code:    http.StatusInternalServerError,
+		Message: msg,
+	}
+	w.WriteHeader(http.StatusInternalServerError)
+	json.NewEncoder(w).Encode(resp)
+}
