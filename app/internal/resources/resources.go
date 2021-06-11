@@ -4,12 +4,11 @@ import (
 	"database/sql"
 	"fmt"
 
-	"gopkg.in/reform.v1/dialects/postgresql"
-
 	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/kelseyhightower/envconfig"
 	"go.uber.org/zap"
 	"gopkg.in/reform.v1"
+	"gopkg.in/reform.v1/dialects/postgresql"
 )
 
 type R struct {

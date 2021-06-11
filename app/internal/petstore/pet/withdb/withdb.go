@@ -31,6 +31,16 @@ func (wdb *WithDB) ReadPet(id int64) (*datatype.Pet, error) {
 	return &external, nil
 }
 
-func (wdb *WithDB) WritePet(pet *datatype.Pet) error {
-	return fmt.Errorf("the method is not implemented")
+func (wdb *WithDB) WritePet(external *datatype.Pet) error {
+	internal := &pet{
+		Name:       external.Name,
+		CategoryID: *external.Category.ID,
+	}
+	err := wdb.db.Save(internal)
+	if err != nil {
+		return err // todo: wrap the error!
+	}
+
+	external.ID = internal.ID
+	return nil
 }

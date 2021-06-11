@@ -12,3 +12,16 @@ type pet struct {
 	CreatedAt  time.Time `reform:"created_at"`
 	UpdatedAt  time.Time `reform:"updated_at"`
 }
+
+// BeforeInsert set CreatedAt and UpdatedAt.
+func (p *pet) BeforeInsert() error {
+	p.CreatedAt = time.Now().UTC().Truncate(time.Second)
+	p.UpdatedAt = p.CreatedAt
+	return nil
+}
+
+// BeforeUpdate set UpdatedAt.
+func (p *pet) BeforeUpdate() error {
+	p.UpdatedAt = time.Now().UTC().Truncate(time.Second)
+	return nil
+}

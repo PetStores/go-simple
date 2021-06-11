@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/PetStores/go-simple/internal/petstore/category/datatype"
+
 	"gopkg.in/reform.v1"
 )
 
@@ -24,8 +25,9 @@ func (wdb *WithDB) FindCategory(params map[string]interface{}) (*datatype.Catego
 
 	i := 0
 	for key, arg := range params {
-		intersect[i] = fmt.Sprintf("%s = $%d", key, i)
+		intersect[i] = fmt.Sprintf("%s = $%d", key, i+1)
 		args[i] = arg
+		i++
 	}
 
 	tail := "WHERE " + strings.Join(intersect, " AND ")

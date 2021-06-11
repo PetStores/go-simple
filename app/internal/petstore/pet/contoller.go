@@ -1,8 +1,6 @@
 package pet
 
 import (
-	"fmt"
-
 	"github.com/PetStores/go-simple/internal/petstore/pet/datatype"
 )
 
@@ -21,6 +19,10 @@ func NewController(rw PetReadWriter) *Controller {
 	}
 }
 
+/*func (c *Controller) ReadPet(id int64) (*datatype.Pet, error) {
+	c.rw.ReadPet(id)
+}*/
+
 func (c *Controller) AddPet(pet *datatype.Pet) error {
-	return fmt.Errorf("the method is not implemented")
+	return c.rw.WritePet(pet)
 }

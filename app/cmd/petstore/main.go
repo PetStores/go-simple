@@ -18,6 +18,8 @@ import (
 
 func main() {
 	logger, _ := zap.NewProduction()
+
+	//nolint:errcheck Не может быть ошибки, т.к. работаем с stdout
 	defer logger.Sync()
 
 	slogger := logger.Sugar()
@@ -26,7 +28,7 @@ func main() {
 
 	rsc, err := resources.New(slogger)
 	if err != nil {
-		slogger.Fatalw("Can't initialize resources.", "err", err)
+		slogger.Panic("Can't initialize resources.", "err", err)
 	}
 	defer func() {
 		err = rsc.Release()
@@ -41,6 +43,9 @@ func main() {
 
 	petdb := petdp.New(rsc.DB)
 	pc := petc.NewController(petdb)
+
+	//
+	//
 
 	slogger.Info("Starting the servers...")
 	rapi := restapi.New(slogger, rsc.Config.RESTAPIPort, cc, pc)
