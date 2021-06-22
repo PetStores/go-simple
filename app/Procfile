@@ -1,2 +1,0 @@
-release: go build -o bin/petstore ./cmd/petstore
-web: bin/petstore
