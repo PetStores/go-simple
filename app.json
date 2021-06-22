@@ -1,0 +1,11 @@
+{
+  "name": "Go Simple: Petstore",
+  "description": "A petstore example",
+  "keywords": [
+    "go"
+  ],
+  "image": "heroku/go:1.16",
+  "mount_dir": "src/github.com/petstores/go-simple",
+  "website": "https://github.com/petstores/go-simple",
+  "repository": "https://github.com/petstores/go-simple"
+}
